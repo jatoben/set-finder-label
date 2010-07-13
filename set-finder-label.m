@@ -103,7 +103,7 @@ int main (int argc, const char *argv[])
       
       if(![fp setResourceValue:n forKey:NSURLLabelNumberKey error:&err])
       {
-        fprintf(stderr, "Error setting Finder label: %ld\n", [err code]);
+        fprintf(stderr, "Error setting Finder label: %ld\n", (long)[err code]);
         ret = [err code];
       }
       
