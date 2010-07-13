@@ -1,7 +1,7 @@
 /*!
- * set-finder-label.c
+ * set-finder-label.m
  * set-finder-label
- *
+ * 
  * Copyright (c) 2010 Ben Gollmer.
  * 
  * Docs on the FileInfo and FolderInfo structs can be found in
@@ -22,9 +22,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <CoreServices/CoreServices.h>
-#include <stdio.h>
-#include <sys/stat.h>
+#import <Foundation/Foundation.h>
+#import <CoreServices/CoreServices.h>
+#import <stdio.h>
+#import <sys/stat.h>
 
 typedef enum FinderLabels
 {
@@ -40,11 +41,8 @@ typedef enum FinderLabels
 
 int main (int argc, const char *argv[])
 {
-  OSErr err;
-  FSRef ref;
+
   FinderLabel label = kFinderLabelInvalid;
-  struct stat stbuf;
-  FSCatalogInfo info;
   int ret = 0;
   
   if(argc < 3)
@@ -89,41 +87,76 @@ int main (int argc, const char *argv[])
     return -1;
   }
   
-  for(int i = 2; i < argc; i++)
-  {    
-    err = FSPathMakeRef((const unsigned char *)argv[i], &ref, NULL);
-    if(err != noErr)
+  /* 10.6 API */
+  if([NSURL instancesRespondToSelector:
+        @selector(setResourceValue:forKey:error:)])
+  {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSError *err = nil;
+    NSNumber *n = [NSNumber numberWithInt:label / 2];
+    
+    for(int i = 2; i < argc; i++)
     {
-      fprintf(stderr, "Error opening %s: %d\n", argv[i], err);
-      ret = 1;
-      continue;
+      NSURL *fp =
+        [[NSURL alloc] initFileURLWithPath:
+          [NSString stringWithUTF8String:argv[i]]];
+      
+      if(![fp setResourceValue:n forKey:NSURLLabelNumberKey error:&err])
+      {
+        fprintf(stderr, "Error setting Finder label: %ld\n", [err code]);
+        ret = [err code];
+      }
+      
+      [fp release];
     }
     
-    stat(argv[i], &stbuf);
-    if(S_ISREG(stbuf.st_mode))
-    {
-      FileInfo *finfo = (FileInfo *)info.finderInfo;
-      finfo->finderFlags = (0x0001 + label);
-      err = FSSetCatalogInfo(&ref, kFSCatInfoFinderInfo, &info);
-    }
-    else if(S_ISDIR(stbuf.st_mode))
-    {
-      FolderInfo *finfo = (FolderInfo *)info.finderInfo;
-      finfo->finderFlags = (0x0001 + label);
-      err = FSSetCatalogInfo(&ref, kFSCatInfoFinderInfo, &info);
-    }
-    else
-    {
-      fprintf(stderr, "%s must be a regular file or directory\n", argv[i]);
-      ret = 1;
-      continue;
-    }
+    [pool drain];
+  }
+  
+  /* Old 'n busted */
+  else
+  {
+    OSErr err;
+    FSRef ref;
+    struct stat stbuf;
+    FSCatalogInfo info;
     
-    if(err != noErr)
+    for(int i = 2; i < argc; i++)
     {
-      fprintf(stderr, "Error setting Finder label: %d\n", err);
-      ret = err;
-      continue;
+      err = FSPathMakeRef((const unsigned char *)argv[i], &ref, NULL);
+      if(err != noErr)
+      {
+        fprintf(stderr, "Error opening %s: %d\n", argv[i], err);
+        ret = 1;
+        continue;
+      }
+      
+      stat(argv[i], &stbuf);
+      if(S_ISREG(stbuf.st_mode))
+      {
+        FileInfo *finfo = (FileInfo *)info.finderInfo;
+        finfo->finderFlags = (0x0001 + label);
+        err = FSSetCatalogInfo(&ref, kFSCatInfoFinderInfo, &info);
+      }
+      else if(S_ISDIR(stbuf.st_mode))
+      {
+        FolderInfo *finfo = (FolderInfo *)info.finderInfo;
+        finfo->finderFlags = (0x0001 + label);
+        err = FSSetCatalogInfo(&ref, kFSCatInfoFinderInfo, &info);
+      }
+      else
+      {
+        fprintf(stderr, "%s must be a regular file or directory\n", argv[i]);
+        ret = 1;
+        continue;
+      }
+      
+      if(err != noErr)
+      {
+        fprintf(stderr, "Error setting Finder label: %d\n", err);
+        ret = err;
+        continue;
+      }
     }
   }
   

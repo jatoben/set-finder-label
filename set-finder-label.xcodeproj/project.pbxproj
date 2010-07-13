@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8DD76F870486A9BA00D96B5E /* set-finder-label.c in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* set-finder-label.c */; settings = {ATTRIBUTES = (); }; };
+		5DF5C94611EBDA1400BC348E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DF5C94511EBDA1400BC348E /* Foundation.framework */; };
+		8DD76F870486A9BA00D96B5E /* set-finder-label.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* set-finder-label.m */; settings = {ATTRIBUTES = (); }; };
 		8DD76F890486A9BA00D96B5E /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 097DBE83FE8419DDC02AAC07 /* CoreServices.framework */; };
 /* End PBXBuildFile section */
 
@@ -24,9 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		08FB7796FE84155DC02AAC07 /* set-finder-label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "set-finder-label.c"; sourceTree = "<group>"; };
+		08FB7796FE84155DC02AAC07 /* set-finder-label.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "set-finder-label.m"; sourceTree = "<group>"; };
 		097DBE83FE8419DDC02AAC07 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		5DE6738711E6C948006D662C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; wrapsLines = 1; };
+		5DF5C94511EBDA1400BC348E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8DD76F8E0486A9BA00D96B5E /* set-finder-label */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "set-finder-label"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -36,6 +38,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DD76F890486A9BA00D96B5E /* CoreServices.framework in Frameworks */,
+				5DF5C94611EBDA1400BC348E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,7 +59,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				08FB7796FE84155DC02AAC07 /* set-finder-label.c */,
+				08FB7796FE84155DC02AAC07 /* set-finder-label.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -65,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				097DBE83FE8419DDC02AAC07 /* CoreServices.framework */,
+				5DF5C94511EBDA1400BC348E /* Foundation.framework */,
 			);
 			name = "External Frameworks and Libraries";
 			sourceTree = "<group>";
@@ -120,7 +124,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8DD76F870486A9BA00D96B5E /* set-finder-label.c in Sources */,
+				8DD76F870486A9BA00D96B5E /* set-finder-label.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,6 +162,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -165,6 +170,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Debug;
 		};
@@ -173,12 +179,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
 		};
